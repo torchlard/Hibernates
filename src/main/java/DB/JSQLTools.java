@@ -16,8 +16,8 @@ import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.values.ValuesStatement;
 
-// FromItemVisitor, ExpressionVisitor, ItemsListVisitor,
-public class JSQLTools implements SelectVisitor, SelectItemVisitor {
+
+public class JSQLTools implements SelectVisitor, FromItemVisitor, ExpressionVisitor, ItemsListVisitor, SelectItemVisitor {
 
   private NaviSoftRealMeta meta;
   private List tables;
@@ -37,9 +37,7 @@ public class JSQLTools implements SelectVisitor, SelectItemVisitor {
       columns = new ArrayList<>();
       this.select = select;
       select.getSelectBody().accept(this);
-      c.close();
       return columns;
-
   }
 
   public List<NaviSoftRealMeta> getColumnListTest(Select select) {
@@ -76,228 +74,230 @@ public class JSQLTools implements SelectVisitor, SelectItemVisitor {
       }
   }
 
-  // @Override
-  // public void visit(Table tableName) {
-  //     if (!(tables == null)) {
-  //         String tableWholeName = tableName.getName();
-  //         tables.add(tableWholeName);
-  //     }
-  // }
+  @Override
+  public void visit(Table tableName) {
+      if (!(tables == null)) {
+          String tableWholeName = tableName.getName();
+          tables.add(tableWholeName);
+      }
+  }
 
-  // @Override
-  // public void visit(SubSelect subSelect) {
-  //     subSelect.getSelectBody().accept(this);
-  // }
+  @Override
+  public void visit(SubSelect subSelect) {
+      subSelect.getSelectBody().accept(this);
+  }
 
-  // @Override
-  // public void visit(Addition addition) {
-  //     visitBinaryExpression(addition);
-  // }
+  @Override
+  public void visit(Addition addition) {
+      visitBinaryExpression(addition);
+  }
 
-  // @Override
-  // public void visit(AndExpression andExpression) {
-  //     visitBinaryExpression(andExpression);
-  // }
+  @Override
+  public void visit(AndExpression andExpression) {
+      visitBinaryExpression(andExpression);
+  }
 
-  // @Override
-  // public void visit(Between between) {
-  //     between.getLeftExpression().accept(this);
-  //     between.getBetweenExpressionStart().accept(this);
-  //     between.getBetweenExpressionEnd().accept(this);
-  // }
+  @Override
+  public void visit(Between between) {
+      between.getLeftExpression().accept(this);
+      between.getBetweenExpressionStart().accept(this);
+      between.getBetweenExpressionEnd().accept(this);
+  }
 
-  // @Override
-  // public void visit(Column tableColumn) {
-  //     if (!(columns == null)) {
-  //         columns.add(tableColumn.getColumnName());
-  //     }
-  //     if (!(metaDataColumns == null)) {
-  //         meta = new NaviSoftRealMeta();
-  //         nameColumn = tableColumn.getColumnName();
-  //         meta.setTable(tableColumn.getTable().getName());
-  //         meta.setFieldName(nameColumn);
-  //     }
-  // }
+  @Override
+  public void visit(Column tableColumn) {
+      if (!(columns == null)) {
+          columns.add(tableColumn.getColumnName());
+      }
+      if (!(metaDataColumns == null)) {
+          meta = new NaviSoftRealMeta();
+          nameColumn = tableColumn.getColumnName();
+          meta.setTable(tableColumn.getTable().getName());
+          meta.setFieldName(nameColumn);
+      }
+  }
 
-  // @Override
-  // public void visit(Division division) {
-  //     visitBinaryExpression(division);
-  // }
+  @Override
+  public void visit(Division division) {
+      visitBinaryExpression(division);
+  }
 
-  // @Override
-  // public void visit(DoubleValue doubleValue) {
-  // }
+  @Override
+  public void visit(DoubleValue doubleValue) {
+  }
 
-  // @Override
-  // public void visit(EqualsTo equalsTo) {
-  //     visitBinaryExpression(equalsTo);
-  // }
+  @Override
+  public void visit(EqualsTo equalsTo) {
+      visitBinaryExpression(equalsTo);
+  }
 
-  // @Override
-  // public void visit(Function function) {
+  @Override
+  public void visit(Function function) {
 
-  // }
+  }
 
-  // @Override
-  // public void visit(GreaterThan greaterThan) {
-  //     visitBinaryExpression(greaterThan);
-  // }
+  @Override
+  public void visit(GreaterThan greaterThan) {
+      visitBinaryExpression(greaterThan);
+  }
 
-  // @Override
-  // public void visit(GreaterThanEquals greaterThanEquals) {
-  //     visitBinaryExpression(greaterThanEquals);
-  // }
+  @Override
+  public void visit(GreaterThanEquals greaterThanEquals) {
+      visitBinaryExpression(greaterThanEquals);
+  }
 
-  // @Override
-  // public void visit(InExpression inExpression) {
-  //     inExpression.getLeftExpression().accept(this);
-  //     inExpression.getItemsList().accept(this);
-  // }
+  @Override
+  public void visit(InExpression inExpression) {
+      inExpression.getLeftExpression().accept(this);
+      // inExpression.getItemsList().accept(this);
+      inExpression.getLeftItemsList().accept(this);
+      inExpression.getRightItemsList().accept(this);
+  }
 
   // @Override
   // public void visit(InverseExpression inverseExpression) {
   //     inverseExpression.getExpression().accept(this);
   // }
 
-  // @Override
-  // public void visit(IsNullExpression isNullExpression) {
-  // }
+  @Override
+  public void visit(IsNullExpression isNullExpression) {
+  }
 
-  // @Override
-  // public void visit(JdbcParameter jdbcParameter) {
-  // }
+  @Override
+  public void visit(JdbcParameter jdbcParameter) {
+  }
 
-  // @Override
-  // public void visit(LikeExpression likeExpression) {
-  //     visitBinaryExpression(likeExpression);
-  // }
+  @Override
+  public void visit(LikeExpression likeExpression) {
+      visitBinaryExpression(likeExpression);
+  }
 
-  // @Override
-  // public void visit(ExistsExpression existsExpression) {
-  //     existsExpression.getRightExpression().accept(this);
-  // }
+  @Override
+  public void visit(ExistsExpression existsExpression) {
+      existsExpression.getRightExpression().accept(this);
+  }
 
-  // @Override
-  // public void visit(LongValue longValue) {
-  // }
+  @Override
+  public void visit(LongValue longValue) {
+  }
 
-  // @Override
-  // public void visit(MinorThan minorThan) {
-  //     visitBinaryExpression(minorThan);
-  // }
+  @Override
+  public void visit(MinorThan minorThan) {
+      visitBinaryExpression(minorThan);
+  }
 
-  // @Override
-  // public void visit(MinorThanEquals minorThanEquals) {
-  //     visitBinaryExpression(minorThanEquals);
-  // }
+  @Override
+  public void visit(MinorThanEquals minorThanEquals) {
+      visitBinaryExpression(minorThanEquals);
+  }
 
-  // @Override
-  // public void visit(Multiplication multiplication) {
-  //     visitBinaryExpression(multiplication);
-  // }
+  @Override
+  public void visit(Multiplication multiplication) {
+      visitBinaryExpression(multiplication);
+  }
 
-  // @Override
-  // public void visit(NotEqualsTo notEqualsTo) {
-  //     visitBinaryExpression(notEqualsTo);
-  // }
+  @Override
+  public void visit(NotEqualsTo notEqualsTo) {
+      visitBinaryExpression(notEqualsTo);
+  }
 
-  // @Override
-  // public void visit(NullValue nullValue) {
-  // }
+  @Override
+  public void visit(NullValue nullValue) {
+  }
 
-  // @Override
-  // public void visit(OrExpression orExpression) {
-  //     visitBinaryExpression(orExpression);
-  // }
+  @Override
+  public void visit(OrExpression orExpression) {
+      visitBinaryExpression(orExpression);
+  }
 
-  // @Override
-  // public void visit(Parenthesis parenthesis) {
-  //     parenthesis.getExpression().accept(this);
-  // }
+  @Override
+  public void visit(Parenthesis parenthesis) {
+      parenthesis.getExpression().accept(this);
+  }
 
-  // @Override
-  // public void visit(StringValue stringValue) {
-  // }
+  @Override
+  public void visit(StringValue stringValue) {
+  }
 
-  // @Override
-  // public void visit(Subtraction subtraction) {
-  //     visitBinaryExpression(subtraction);
-  // }
+  @Override
+  public void visit(Subtraction subtraction) {
+      visitBinaryExpression(subtraction);
+  }
 
-  // public void visitBinaryExpression(BinaryExpression binaryExpression) {
-  //     binaryExpression.getLeftExpression().accept(this);
-  //     binaryExpression.getRightExpression().accept(this);
-  // }
+  public void visitBinaryExpression(BinaryExpression binaryExpression) {
+      binaryExpression.getLeftExpression().accept(this);
+      binaryExpression.getRightExpression().accept(this);
+  }
 
-  // @Override
-  // public void visit(ExpressionList expressionList) {
-  //     for (Iterator iter = expressionList.getExpressions().iterator(); iter.hasNext();) {
-  //         Expression expression = (Expression) iter.next();
-  //         expression.accept(this);
-  //     }
+  @Override
+  public void visit(ExpressionList expressionList) {
+      for (Iterator iter = expressionList.getExpressions().iterator(); iter.hasNext();) {
+          Expression expression = (Expression) iter.next();
+          expression.accept(this);
+      }
 
-  // }
+  }
 
-  // @Override
-  // public void visit(DateValue dateValue) {
-  // }
+  @Override
+  public void visit(DateValue dateValue) {
+  }
 
-  // @Override
-  // public void visit(TimestampValue timestampValue) {
-  // }
+  @Override
+  public void visit(TimestampValue timestampValue) {
+  }
 
-  // @Override
-  // public void visit(TimeValue timeValue) {
-  // }
+  @Override
+  public void visit(TimeValue timeValue) {
+  }
 
-  // @Override
-  // public void visit(CaseExpression caseExpression) {
-  // }
+  @Override
+  public void visit(CaseExpression caseExpression) {
+  }
 
-  // @Override
-  // public void visit(WhenClause whenClause) {
-  // }
+  @Override
+  public void visit(WhenClause whenClause) {
+  }
 
-  // @Override
-  // public void visit(AllComparisonExpression allComparisonExpression) {
-  //     allComparisonExpression.getSubSelect().getSelectBody().accept(this);
-  // }
+  @Override
+  public void visit(AllComparisonExpression allComparisonExpression) {
+      allComparisonExpression.getSubSelect().getSelectBody().accept(this);
+  }
 
-  // @Override
-  // public void visit(AnyComparisonExpression anyComparisonExpression) {
-  //     anyComparisonExpression.getSubSelect().getSelectBody().accept(this);
-  // }
+  @Override
+  public void visit(AnyComparisonExpression anyComparisonExpression) {
+      anyComparisonExpression.getSubSelect().getSelectBody().accept(this);
+  }
 
-  // @Override
-  // public void visit(SubJoin subjoin) {
-  //     // subjoin.getLeft().accept(this);
-  //     // subjoin.getJoinList().getRightItem().accept(this);
-  // }
+  @Override
+  public void visit(SubJoin subjoin) {
+      // subjoin.getLeft().accept(this);
+      // subjoin.getJoinList().getRightItem().accept(this);
+  }
 
-  // @Override
-  // public void visit(Concat concat) {
-  //     throw new UnsupportedOperationException("Not supported yet.");
-  // }
+  @Override
+  public void visit(Concat concat) {
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-  // @Override
-  // public void visit(Matches mtchs) {
-  //     throw new UnsupportedOperationException("Not supported yet.");
-  // }
+  @Override
+  public void visit(Matches mtchs) {
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-  // @Override
-  // public void visit(BitwiseAnd ba) {
-  //     throw new UnsupportedOperationException("Not supported yet.");
-  // }
+  @Override
+  public void visit(BitwiseAnd ba) {
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-  // @Override
-  // public void visit(BitwiseOr bo) {
-  //     throw new UnsupportedOperationException("Not supported yet.");
-  // }
+  @Override
+  public void visit(BitwiseOr bo) {
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-  // @Override
-  // public void visit(BitwiseXor bx) {
-  //     throw new UnsupportedOperationException("Not supported yet.");
-  // }
+  @Override
+  public void visit(BitwiseXor bx) {
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
 
   @Override
   public void visit(AllColumns ac) {
@@ -380,38 +380,92 @@ public class JSQLTools implements SelectVisitor, SelectItemVisitor {
 
   }
 
-  // @Override
-  // public void visit(LateralSubSelect lss) {
-  //     throw new UnsupportedOperationException("Not supported yet.");
-  // }
+  @Override
+  public void visit(LateralSubSelect lss) {
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-  // @Override
-  // public void visit(ValuesList vl) {
-  //     throw new UnsupportedOperationException("Not supported yet.");
-  // }
+  @Override
+  public void visit(ValuesList vl) {
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-  // @Override
-  // public void visit(CastExpression ce) {
-  //     throw new UnsupportedOperationException("Not supported yet.");
-  // }
+  @Override
+  public void visit(CastExpression ce) {
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-  // @Override
-  // public void visit(Modulo modulo) {
-  //     throw new UnsupportedOperationException("Not supported yet.");
-  // }
+  @Override
+  public void visit(Modulo modulo) {
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-  // @Override
-  // public void visit(AnalyticExpression ae) {
-  //     throw new UnsupportedOperationException("Not supported yet.");
-  // }
+  @Override
+  public void visit(AnalyticExpression ae) {
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-  // @Override
-  // public void visit(ExtractExpression ee) {
-  //     throw new UnsupportedOperationException("Not supported yet.");
-  // }
+  @Override
+  public void visit(ExtractExpression ee) {
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-  // @Override
-  // public void visit(MultiExpressionList mel) {
-  //     throw new UnsupportedOperationException("Not supported yet.");
-  // }
+  @Override
+  public void visit(MultiExpressionList mel) {
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  @Override 
+  public void visit(NamedExpressionList ee) {}
+  @Override 
+  public void visit(CollateExpression ee) {}
+  @Override 
+  public void visit(NextValExpression ee) {}
+  @Override 
+  public void visit(NotExpression ee) {}
+  @Override 
+  public void visit(DateTimeLiteralExpression ee) {}
+  @Override 
+  public void visit(TimeKeyExpression ee) {}
+  @Override 
+  public void visit(OracleHint ee) {}
+  @Override 
+  public void visit(RowConstructor ee) {}
+  @Override 
+  public void visit(ValueListExpression ee) {}
+  @Override 
+  public void visit(MySQLGroupConcat ee) {}
+  @Override 
+  public void visit(KeepExpression ee) {}
+  @Override 
+  public void visit(NumericBind ee) {}
+  @Override 
+  public void visit(UserVariable ee) {}
+  @Override 
+  public void visit(RegExpMySQLOperator ee) {}
+  @Override 
+  public void visit(JsonOperator ee) {}
+  @Override 
+  public void visit(JsonExpression ee) {}
+  @Override 
+  public void visit(RegExpMatchOperator ee) {}
+  @Override 
+  public void visit(OracleHierarchicalExpression ee) {}
+  @Override 
+  public void visit(IntervalExpression ee) {}
+  @Override 
+  public void visit(HexValue ee) {}
+  @Override 
+  public void visit(JdbcNamedParameter ee) {}
+  @Override 
+  public void visit(SignedExpression ee) {}
+  @Override 
+  public void visit(BitwiseLeftShift ee) {}
+  @Override 
+  public void visit(BitwiseRightShift ee) {}
+  @Override 
+  public void visit(ParenthesisFromItem ee) {}
+  @Override 
+  public void visit(TableFunction ee) {}
+
 }

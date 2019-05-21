@@ -130,7 +130,7 @@ public class Entry {
     // cr.select(t)
     //   .where(cb.or(
     //     cb.and(
-    //       cb.gt(t.get("num"), 30),
+    //       cb.gt(t.get("num"), 10),
     //       cb.lt(t.get("age"), 70)
     //     ),
     //     cb.like(t.get("name"), "a%")
@@ -159,21 +159,21 @@ public class Entry {
       // List<String> tableList = finder.getTableList(stmt);
       // tableList.forEach(System.out::println);
       
-      // PlainSelect plain = (PlainSelect)select.getSelectBody();
-      // List<SelectItem> selectItems = plain.getSelectItems();
-      // System.out.println(selectItems.size());
+      PlainSelect plain = (PlainSelect)select.getSelectBody();
+      List<SelectItem> selectItems = plain.getSelectItems();
+      System.out.println(selectItems.size());
 
-      // for(int i=0; i<selectItems.size(); i++){
-      //   SelectItem expr = ((SelectItem) selectItems.get(i));
-      //   if (expr instanceof SelectExpressionItem){
-      //     SelectExpressionItem col = (SelectExpressionItem) expr;
-      //     // if (col.getAlias() != null){
-      //     //   System.out.println(col.getAlias());
-      //     // } else {
-      //     // }
-      //     System.out.println(col);
-      //   }
-      // }
+      for(int i=0; i<selectItems.size(); i++){
+        SelectItem expr = ((SelectItem) selectItems.get(i));
+        if (expr instanceof SelectExpressionItem){
+          SelectExpressionItem col = (SelectExpressionItem) expr;
+          // if (col.getAlias() != null){
+          //   System.out.println(col.getAlias());
+          // } else {
+          // }
+          System.out.println(col);
+        }
+      }
 
       // for(int i=0;i<selectItems.size();i++){
 
@@ -193,11 +193,11 @@ public class Entry {
 
       // }
 
-      JSQLTools jsqltools = new JSQLTools();
-      List<NaviSoftRealMeta> fieldlist = jsqltools.getColumnListTest(select);
-      for (int i = 0; i < fieldlist.size(); i++) {
-          System.out.println(fieldlist.get(i).getFieldName() + " " + fieldlist.get(i).getAliasFieldName());
-      }
+      // JSQLTools jsqltools = new JSQLTools();
+      // List<NaviSoftRealMeta> fieldlist = jsqltools.getColumnListTest(select);
+      // for (int i = 0; i < fieldlist.size(); i++) {
+      //     System.out.println(fieldlist.get(i).getFieldName() + " " + fieldlist.get(i).getAliasFieldName());
+      // }
       
 
     } catch (JSQLParserException e){
